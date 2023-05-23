@@ -1,0 +1,210 @@
+<div class="container bg-light row p-3 border border-secondary">
+    <form method="post" class="col" id="myForm">
+        <h1 class="text-primary">{{title}}</h1>
+        <div class="mb-4">
+            
+            <label class="mt-2">Adicionar cliente <span>(Opcional)</span></label>
+            
+            <div class="form-floating mb-3 mt-2 col-8">
+                <input type="text" class="form-control" id="nomeCliente" name="nomeCliente" placeholder="Nome do cliente">
+                <label for="nomeCliente">Nome do cliente</label>
+            </div>   
+            <hr>
+            <label class="mt-2">Adicionar produto</label>     
+            
+            <div id="product-box">
+                <div class="row mb-1">
+                    <div class="col-4 mt-2">
+                        <input type="text" class="form-control p-3" placeholder="Nome do produto" oninput="updateResumo()"  name="produto-1" id="produto-1" aria-label="Nome do produto">
+                    </div>
+                    <div class="col-4 mt-2">
+                        <input type="number" class="form-control p-3" placeholder="Valor do produto" oninput="updateResumo()" name="valor-1" id="valor-1" aria-label="Valor do produto">
+                    </div>
+                </div>
+            </div>
+
+            <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" onclick="addProduct()">
+                Adicionar outro produto (Max: 6 produtos)
+            </a>
+            <hr>
+            <label class="my-2">Forma de pagamento</label>     
+
+            <div class="col">
+                <ul class="list-group mb-3">
+                    <li class="list-group-item">
+                        <div class="row g-2">
+                            <div class="col-1 col-md-1 col-lg-1 col-xl-1 text-left align-self-center">
+                                <input type="radio" name="forma-pagamento" class="form-check-input" id="forma-pagamento-2" onclick="showDiv()" value="2"/>
+                            </div>
+                            <div class="col-3 offset-1 align-self-center col-sm-2 col-md-2 offset-md-0 col-lg-2 offset-lg-0 col-xl-1 align-self-center mt-3">
+                                <label for="credito">Cartão de crédito/débito</label>
+                            </div>
+                        </div>
+                        <div id="cadastro-card" class="row g-3" style="display:none">
+                            <div class="row g-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" name="quantidadeParcelas" placeholder="Quantidade de parcelas" aria-label="quantidadeParcelas" id="quantidadeParcelas">
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-outline-primary" onclick="gerarParcelas()">Confirmar parcelas</a>
+                                </div>
+                            </div>
+                            <div id="parcelasContainer" class="fieldset mt-3"></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row g-2">
+                            <div class="col-1 col-md-1 col-lg-1 col-xl-1 text-left align-self-center">
+                                <input type="radio" name="forma-pagamento" class="form-check-input" id="forma-pagamento-1" onclick="hideDiv()" value="1"/>
+                            </div>
+                            <div class="col-3 offset-1 align-self-center col-sm-2 col-md-2 offset-md-0 col-lg-2 offset-lg-0 col-xl-1 align-self-center mt-3">
+                                <label for="boleto">Boleto</label>
+                                <input id="boleto" name="boleto" type="hidden"/>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary p-3 align-items-right" name="btn-success" id="btn-success">Registrar venda</button>
+        <a type="button" class="btn btn-outline-danger p-3 align-items-right" href="index.php">Histórico de vendas</a>
+    </form>
+    <div class="col-4 border p-4 pt-5" id="resumo">
+        <h3>Resumo</h3>
+        <p class="border-bottom pt-3">Dados da venda</p>
+        <h4 id="total">Total da venda: R$0,00</h4>
+    </div>
+</div>
+
+<script>
+    var productCount = 1;
+
+    function addProduct() {
+        var parentElement = document.getElementById('product-box');
+        if (productCount < 6) {
+            productCount++;
+
+            var rowDiv = document.createElement('div');
+            rowDiv.classList.add('row', 'mb-1');
+
+            var col1Div = document.createElement('div');
+            col1Div.classList.add('col-4', 'mt-2');
+
+            var input1 = document.createElement('input');
+            input1.type = 'text';
+            input1.classList.add('form-control', 'p-3');
+            input1.placeholder = 'Nome do produto';
+            input1.name = 'produto-' + productCount;
+            input1.id = 'produto-' + productCount;
+            input1.setAttribute('aria-label', 'Nome do produto');
+            input1.setAttribute('oninput', 'updateResumo()');
+
+            col1Div.appendChild(input1);
+            rowDiv.appendChild(col1Div);
+
+            var col2Div = document.createElement('div');
+            col2Div.classList.add('col-4', 'mt-2');
+
+            var input2 = document.createElement('input');
+            input2.type = 'number';
+            input2.classList.add('form-control', 'p-3');
+            input2.placeholder = 'Valor do produto';
+            input2.name = 'valor-' + productCount;
+            input2.id = 'valor-' + productCount;
+            input2.setAttribute('aria-label', 'Valor do produto');
+            input2.setAttribute('oninput', 'updateResumo()');
+
+            col2Div.appendChild(input2);
+            rowDiv.appendChild(col2Div);
+
+            parentElement.appendChild(rowDiv);
+
+            updateResumo();
+        }
+    }
+
+    function updateResumo() {
+        var resumoElement = document.getElementById('resumo');
+        var produtos = document.querySelectorAll('[name^="produto-"]');
+        var valores = document.querySelectorAll('[name^="valor-"]');
+        var totalBoleto = document.querySelector('#boleto');
+        var total = 0;
+
+        resumoElement.innerHTML = `
+            <h3>Resumo</h3>
+            <p class="border-bottom pt-3">Dados da venda</p>
+        `;
+
+        for (var i = 0; i < produtos.length; i++) {
+            var produtoNome = produtos[i].value;
+            var produtoValor = parseFloat(valores[i].value) || 0;
+
+            resumoElement.innerHTML += `
+                <h5><small class="text-body-secondary">${produtoNome} - R$${produtoValor.toFixed(2)}</small></h5>
+            `;
+
+            total += produtoValor;
+        }
+
+        resumoElement.innerHTML += `
+            <h4 id="total" value="${total}" name="total">Total da venda: R$${total.toFixed(2)}</h4>
+        `;
+        totalBoleto.innerHTML = `
+            <input id="boletoTotal" name="boletoTotal" type="hidden" value="${total}"/>
+        `;
+    }
+
+    function showDiv() {
+        document.getElementById('cadastro-card').style.display = 'flex';
+    }
+
+    function hideDiv() {
+        document.getElementById('cadastro-card').style.display = 'none';
+    }
+
+    function gerarParcelas() {
+        var quantidadeParcelas = parseInt(document.getElementById('quantidadeParcelas').value);
+        var total = document.querySelector('#boletoTotal').getAttribute('value');
+        var valorTotal = parseFloat(total);
+
+        var parcelasContainer = document.getElementById('parcelasContainer');
+        parcelasContainer.innerHTML = '';
+
+        if (quantidadeParcelas > 0) {
+            var valorParcela = valorTotal / quantidadeParcelas;
+
+            for (var i = 1; i <= quantidadeParcelas; i++) {
+                var parcelaRow = document.createElement('div');
+                parcelaRow.classList.add('row');
+
+                var numeroParcela = document.createElement('div');
+                numeroParcela.classList.add('input-group', 'mb-3', 'col');
+                numeroParcela.innerHTML = '<span class="input-group-text">' + i + '</span>';
+
+                var dataParcela = document.createElement('input');
+                dataParcela.classList.add('form-control');
+                dataParcela.type = 'date';
+                dataParcela.value = '2023-01-25';
+                dataParcela.setAttribute('aria-label', 'Data da parcela');
+                dataParcela.name = 'data-' + i; 
+                dataParcela.id = 'data-' + i; 
+
+                var valorParcelaInput = document.createElement('input');
+                valorParcelaInput.classList.add('form-control', 'col');
+                valorParcelaInput.type = 'text';
+                valorParcelaInput.placeholder = 'R$' + valorParcela.toFixed(2);
+                valorParcelaInput.value = valorParcela.toFixed(2);
+                valorParcelaInput.setAttribute('aria-label', 'valorParcela');
+                valorParcelaInput.name = 'valor-' + i; 
+                valorParcelaInput.id = 'valor-' + i;
+
+                numeroParcela.appendChild(dataParcela);
+                parcelaRow.appendChild(numeroParcela);
+                parcelaRow.innerHTML += '<div class="col-7"></div>';
+                parcelaRow.querySelector('.col-7').appendChild(valorParcelaInput);
+
+                parcelasContainer.appendChild(parcelaRow);
+            }
+        }
+    }
+</script>

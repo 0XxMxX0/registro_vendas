@@ -1,0 +1,21 @@
+<div class="container bg-light p-3 border border-secondary">
+    <h1 class="text-primary">{{title}}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id_Venda</th>
+                <th scope="col">Nome do Cliente</th>
+                <th scope="col">Forma de pagamento</th>
+                <th scope="col">Valor da venda</th>
+                <th scope="col">Comando</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{tableLine}}
+        </tbody>
+    </table>
+    <div class="mt-4">
+        <a class="btn btn-primary" href="index.php?type=create">Registrar nova venda</a>
+    </div>
+</div>
+

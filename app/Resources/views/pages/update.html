@@ -1,0 +1,26 @@
+
+<form method="post" class="container bg-light p-3 border border-secondary">
+    <h1 class="text-primary">{{title}}</h1>
+    <div class=" border-bottom ">
+        <label class="mt-2">Nome do cliente</label>
+        <div class="form-floating mb-3 mt-2 col-5">
+            <input type="text" class="form-control" id="nomeCliente" name="nomeCliente" placeholder="{{nomeCliente}}">
+            <label for="nomeCliente">{{nomeCliente}}</label>
+        </div>   
+        <label class="mt-2">Forma de pagamento</label>     
+        <div class="form-floating mb-3 mt-2 col-5">
+            <input type="text" class="form-control" id="nomeCliente" name="nomeCliente" disabled placeholder="{{formaPagamento}}">
+            <label for="nomeCliente">{{formaPagamento}}</label>
+        </div>
+    </div>
+
+    <div class="fieldset mt-3">
+        <legend class="legend ">Pendencias financeiras</legend>
+            {{financeiro}}
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary" name="btn-success">Confirmar atualização</button>
+        <a class="btn btn-outline-danger" href="index.php">Historico de vendas</a>
+    </div>
+</form>

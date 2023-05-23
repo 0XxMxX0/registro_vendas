@@ -32,14 +32,16 @@ class Create extends Page {
 
                 for($i = 0; $i < $produtos; $i++){
                     if($_POST['forma-pagamento'] != ''){
-                        
+
                         if($_POST['forma-pagamento'] == 1){
+                            $i++;
 
                             if($_POST['boletoTotal'] != '' && $_POST['produto'.'-'.$i] != ''){
-                                
                                 $obVenda = new \App\Model\Venda('',$_POST['nomeCliente'],$_POST['forma-pagamento']);
                                 $obFinanceiro = new \App\Model\Financeiro('', $_POST['boletoTotal'], date('Y-m-d'),$_POST['produto'.'-'.$i],$i);
                                 $obSalesDao->create($obVenda, $obFinanceiro, $produtos);
+
+                                return self::getPaymentSuccess();
                             } 
 
                         } else if($_POST['forma-pagamento'] == 2){

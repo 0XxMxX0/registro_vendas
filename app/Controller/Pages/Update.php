@@ -36,14 +36,18 @@ class Update extends Page {
                 $financeiroN = '';
                 $produto  = '';
 
+
                 foreach($resultado as $key) {
                     $nomeCliente = $key['NomeCliente'];
                     $formaPagamento = ($key['FormaPagamento'] == 1) ? 'Boleto' : (($key['FormaPagamento'] == 2) ? 'Cartão de crédito/débito' : 'Não informado');
-                    
-                    $produto .= "<div class='form-floating mb-3 mt-2 col-5'>
+
+                    if($key['Produto'] != null){
+                       $produto .= "<div class='form-floating mb-3 mt-2 col-5'>
                                     <input type='text' class='form-control' id='nomeCliente' name='nomeCliente' disabled placeholder='Produto: {$key['Produto']} | Data: {$key['Date']} | Valor: {$key['Valor']}'>
                                     <label for='nomeCliente'>Produto: {$key['Produto']} | Data: {$key['Date']} | Valor: {$key['Valor']}</label>
-                                 </div>";
+                                 </div>"; 
+                    }
+                    
 
                     if($key['Valor'] != 0){
 
@@ -69,7 +73,7 @@ class Update extends Page {
                                             </div>
                                         </div>";
                     }
-                    
+
                     
                 
                     if(isset($_POST['btn-success'])) {
@@ -114,7 +118,7 @@ class Update extends Page {
                 }
             }
         }
-        
+
         $title = 'Atualizar venda';
         $content = View::render('pages/update', [
             'title' => $title,
@@ -123,7 +127,7 @@ class Update extends Page {
             'financeiro' => $financeiro,
             'financeiroNãofaturado' => $financeiroN,
             'titleFinanceiroNo' => $titleFinanceiroNo != '' ? $titleFinanceiroNo : '',
-            'produto' => $produto
+            'produto' => $produto,
         ]);
         return parent::getPage($title, $content);
     }

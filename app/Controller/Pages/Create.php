@@ -30,7 +30,13 @@ class Create extends Page {
                 $id_venda = $obSalesDao->createClient($obVenda);
 
                 if ($quantidadeParcelas > 0) {
-                    for ($i = 0; $i < $quantidadeProdutos; $i++) {
+
+                    $valorfor = $quantidadeProdutos;
+                    if($quantidadeParcelas > $quantidadeProdutos){
+                        $valorfor = $quantidadeParcelas;
+                    } 
+
+                    for ($i = 0; $i < $valorfor; $i++) {
 
                         if ($_POST['forma-pagamento'] == 1) {
                             
@@ -55,7 +61,6 @@ class Create extends Page {
                             } else {
                                 $valorParcela = '0';
                                 $dataParcela = date('Y-m-d');
-                                echo 'teste';
                             }
 
                             if ($produto != '' && $valorParcela != '' && $dataParcela != '') {
@@ -71,7 +76,6 @@ class Create extends Page {
                 }
             } 
         } 
-
         $title = 'Registrar venda';
         $content = View::render('pages/create', compact('title'));
         return parent::getPage($title, $content);

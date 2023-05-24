@@ -21,19 +21,17 @@ class SalesDao{
         }
     }    
     
-    public function createPayment(Financeiro $financeiro, $numeroParcela){
+    public function createPayment(Financeiro $financeiro, $numeroParcela, $id_Venda){
 
-        
         if($financeiro != ''){
             
-            if($financeiro->getid_Venda() != '' && $financeiro->getData() != '' && $financeiro->getValor() != ''){
-                
-                var_dump($financeiro, $numeroParcela);
+            if($id_Venda != '' && $financeiro->getData() != '' && $financeiro->getValor() != ''){
+
 
                 $sql = "INSERT INTO financeiro (Id_Venda, Valor, Date, Produto, NumeroParcela) VALUES (?,?,?,?,?)";
 
                 $insert = Connect::getConn()->prepare($sql);
-                $insert->bindValue(1, $financeiro->getid_Venda());
+                $insert->bindValue(1, $id_Venda);
                 $insert->bindValue(2, $financeiro->getValor());
                 $insert->bindValue(3, $financeiro->getData());
                 $insert->bindValue(4, $financeiro->getProduto());

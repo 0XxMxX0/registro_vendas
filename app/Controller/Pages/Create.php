@@ -36,7 +36,6 @@ class Create extends Page {
 
                 if ($valorfor > 0) {
 
-
                     for ($i = 0; $i < $valorfor; $i++) {
 
                         if ($_POST['forma-pagamento'] == 1) {
@@ -46,25 +45,15 @@ class Create extends Page {
 
                             if ($valorParcela != '' && $produto != '') {
                                 
-                                // var_dump($valorParcela);
-                                // var_dump($produto);
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, date('Y-m-d'), $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count);
                                 
-                                // return self::getPaymentSuccess();
+                                return self::getPaymentSuccess();
                             }
 
                         } else if ($_POST['forma-pagamento'] == 2) {
 
                             $produto = $_POST['produto'.'-'.$i];
-
-                            
-                            var_dump($i);
-                            var_dump($count);
-                            var_dump($quantidadeParcelas);
-                            var_dump($quantidadeProdutos);
-                            var_dump($valorfor);
-
 
                             if($count <= $quantidadeParcelas) {
                                 $valorParcela = $_POST['valor'.'-'.$i];
@@ -77,13 +66,10 @@ class Create extends Page {
 
                             if ($valorParcela != '' && $dataParcela != '') {
                                
-                                var_dump($valorParcela);
-                                var_dump($dataParcela);
-                               
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, $dataParcela, $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count); 
 
-                                // return self::getPaymentSuccess();
+                                return self::getPaymentSuccess();
                             }
                         }
                         $count++;

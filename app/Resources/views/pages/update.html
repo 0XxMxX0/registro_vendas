@@ -12,11 +12,15 @@
             <input type="text" class="form-control" id="nomeCliente" name="nomeCliente" disabled placeholder="{{formaPagamento}}">
             <label for="nomeCliente">{{formaPagamento}}</label>
         </div>
+        <label class="mt-2">Resumo da venda</label>     
+        {{produto}}
     </div>
 
     <div class="fieldset mt-3">
         <legend class="legend ">Pendencias financeiras</legend>
             {{financeiro}}
+        <legend class="legend ">{{titleFinanceiroNo}}</legend>
+            {{financeiroNãofaturado}}
     </div>
 
     <div class="mt-4">

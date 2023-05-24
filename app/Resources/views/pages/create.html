@@ -15,10 +15,10 @@
             <div id="product-box">
                 <div class="row mb-1">
                     <div class="col-4 mt-2">
-                        <input type="text" class="form-control p-3" placeholder="Nome do produto" oninput="updateResumo()"  name="produto-1" id="produto-1" aria-label="Nome do produto">
+                        <input type="text" class="form-control p-3" placeholder="Nome do produto" oninput="updateResumo()"  name="produto-0" id="produto-0" aria-label="Nome do produto">
                     </div>
                     <div class="col-4 mt-2">
-                        <input type="number" class="form-control p-3" placeholder="Valor do produto" oninput="updateResumo()" name="valor-1" id="valor-1" aria-label="Valor do produto">
+                        <input type="number" class="form-control p-3" placeholder="Valor do produto" oninput="updateResumo()" name="valor-0" id="valor-0" aria-label="Valor do produto">
                     </div>
                 </div>
             </div>
@@ -78,12 +78,13 @@
 </div>
 
 <script>
-    var productCount = 1;
-
+    var productCount = 0;
+    var count = 1;
     function addProduct() {
         var parentElement = document.getElementById('product-box');
         if (productCount < 6) {
             productCount++;
+            count++;
             var totalProdutos = document.querySelector('#quantidadeProdutos');
 
             var rowDiv = document.createElement('div');
@@ -121,9 +122,8 @@
 
             parentElement.appendChild(rowDiv);
             totalProdutos.innerHTML = `
-                <input id="quantidadeProdutos" name="quantidadeProdutos" type="hidden" value="${productCount}"/>
+                <input id="quantidadeProdutos" name="quantidadeProdutos" type="hidden" value="${count}"/>
             `;
-
             updateResumo();
         }
     }
@@ -172,6 +172,8 @@
         var quantidadeParcelas = parseInt(document.getElementById('quantidadeParcelas').value);
         var total = document.querySelector('#boletoTotal').getAttribute('value');
         var valorTotal = parseFloat(total);
+        
+        var count = 0;
 
         var parcelasContainer = document.getElementById('parcelasContainer');
         parcelasContainer.innerHTML = '';
@@ -192,8 +194,8 @@
                 dataParcela.type = 'date';
                 dataParcela.value = '2023-01-25';
                 dataParcela.setAttribute('aria-label', 'Data da parcela');
-                dataParcela.name = 'data-' + i; 
-                dataParcela.id = 'data-' + i; 
+                dataParcela.name = 'data-' + count; 
+                dataParcela.id = 'data-' + count; 
 
                 var valorParcelaInput = document.createElement('input');
                 valorParcelaInput.classList.add('form-control', 'col');
@@ -201,8 +203,8 @@
                 valorParcelaInput.placeholder = 'R$' + valorParcela.toFixed(2);
                 valorParcelaInput.value = valorParcela.toFixed(2);
                 valorParcelaInput.setAttribute('aria-label', 'valorParcela');
-                valorParcelaInput.name = 'valor-' + i; 
-                valorParcelaInput.id = 'valor-' + i;
+                valorParcelaInput.name = 'valor-' + count; 
+                valorParcelaInput.id = 'valor-' + count;
 
                 numeroParcela.appendChild(dataParcela);
                 parcelaRow.appendChild(numeroParcela);
@@ -210,7 +212,10 @@
                 parcelaRow.querySelector('.col-7').appendChild(valorParcelaInput);
 
                 parcelasContainer.appendChild(parcelaRow);
+                console.log(count);
+                count++;
             }
+            
         }
     }
 </script>

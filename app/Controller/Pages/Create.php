@@ -20,47 +20,48 @@ class Create extends Page {
         if(isset($_POST['btn-success'])){
 
             $obSalesDao = new SalesDao();
-            $produtos = $_POST['quantidadeParcelas'];
-            
+
+
+            $quantidadeParcelas = $_POST['quantidadeParcelas'];
+            $quantidadeProdutos = $_POST['quantidadeProdutos'];
+
             if($_POST['forma-pagamento'] == 1){
-                $produtos = 1;
+                $quantidadeParcelas = 1;
             } 
 
-            if($produtos > 0){
-
-                $infoVenda = [];
-
-                for($i = 0; $i < $produtos; $i++){
-                    if($_POST['forma-pagamento'] != ''){
-
-                        if($_POST['forma-pagamento'] == 1){
-                            $i++;
-
-                            if($_POST['boletoTotal'] != '' && $_POST['produto'.'-'.$i] != ''){
-                                $obVenda = new \App\Model\Venda('',$_POST['nomeCliente'],$_POST['forma-pagamento']);
-                                $obFinanceiro = new \App\Model\Financeiro('', $_POST['boletoTotal'], date('Y-m-d'),$_POST['produto'.'-'.$i],$i);
-                                $obSalesDao->create($obVenda, $obFinanceiro, $produtos);
-
-                                return self::getPaymentSuccess();
-                            } 
-
-                        } else if($_POST['forma-pagamento'] == 2){
-
-                            if($_POST['produto'.'-'.$i] != '' && $_POST['valor'.'-'.$i] != '' && $_POST['data'.'-'.$i] != ''){
-
-                                $obVenda = new \App\Model\Venda('',$_POST['nomeCliente'],$_POST['forma-pagamento']);
-                                $obFinanceiro = new \App\Model\Financeiro('',$_POST['valor'.'-'.$i],$_POST['data'.'-'.$i],$_POST['produto'.'-'.$i],$i);
-                                $obSalesDao->create($obVenda, $obFinanceiro, $produtos);
-                                
-                                return self::getPaymentSuccess();
-
-                            } 
+            if ($quantidadeParcelas > 0) {
+                for ($i = 1; $i <= $quantidadeParcelas; $i++) {
+                    if ($_POST['forma-pagamento'] != '') {
+                        if ($_POST['forma-pagamento'] == 1) {
+                            // ...
+                        } else if ($_POST['forma-pagamento'] == 2) {
+                            $valorParcela = $_POST['valor'.'-'.$i];
+                            $dataParcela = $_POST['data'.'-'.$i];
+                            $produto = $_POST['produto'.'-'.$i];
+                            
+                            if ($i <= $quantidadeProdutos) {
+                                if ($produto != '' && $valorParcela != '' && $dataParcela != '') {
+                                    $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
+                                    $obFinanceiro = new \App\Model\Financeiro('', $valorParcela, $dataParcela, $produto, $i);
+                                    $obSalesDao->create($obVenda, $obFinanceiro, $quantidadeParcelas);
+                                    return self::getPaymentSuccess();
+                                }
+                            } else {
+                                $valorParcela = 0;
+                                $dataParcela = '0000-00-00';
+            
+                                if ($produto != '' && $valorParcela == 0 && $dataParcela == '0000-00-00') {
+                                    $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
+                                    $obFinanceiro = new \App\Model\Financeiro('', $valorParcela, $dataParcela, $produto, $i);
+                                    $obSalesDao->create($obVenda, $obFinanceiro, $quantidadeParcelas);
+                                    return self::getPaymentSuccess();
+                                }
+                            }
                         }
                     } else {
                         $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => 'Formato de pagamento deve ser preenchido!'];
                     }
                 }
-
             } else {
                 $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => 'Dados incompletos'];
             }

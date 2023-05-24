@@ -23,8 +23,10 @@ class SalesDao{
     
     public function createPayment(Financeiro $financeiro, $numeroParcela){
 
+        
         if($financeiro != ''){
-            if($financeiro->getid_Venda() != '' && $financeiro->getData() != '' && $financeiro->getProduto() != '' && $financeiro->getValor() != ''){
+            
+            if($financeiro->getid_Venda() != '' && $financeiro->getData() != '' && $financeiro->getValor() != ''){
                 
                 $sql = "INSERT INTO financeiro (Id_Venda, Valor, Date, Produto, NumeroParcela) VALUES (?,?,?,?,?)";
 

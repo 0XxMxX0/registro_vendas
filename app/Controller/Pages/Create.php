@@ -28,13 +28,19 @@ class Create extends Page {
                 
                 $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
                 $id_venda = $obSalesDao->createClient($obVenda);
-               
+
                 $valorfor = $quantidadeProdutos;
+                
+                var_dump($quantidadeParcelas);
+                var_dump($quantidadeProdutos);
+                
                 if($quantidadeParcelas > $quantidadeProdutos){
                     $valorfor = $quantidadeParcelas;
                 } 
 
                 if ($valorfor > 0) {
+
+                    var_dump($valorfor);
 
                     for ($i = 0; $i < $valorfor; $i++) {
 
@@ -43,12 +49,21 @@ class Create extends Page {
                             $valorParcela = $_POST['valor'.'-'.$i];
                             $produto = $_POST['produto'.'-'.$i];
 
+                            var_dump($i);
+                            
+                            echo 'teste 1 - boleto';
+
                             if ($valorParcela != '' && $produto != '') {
                                 
+                                var_dump($valorParcela);
+                                var_dump($produto);
+                                
+                                echo 'teste 2 - boleto';
+
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, date('Y-m-d'), $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count);
                                 
-                                return self::getPaymentSuccess();
+                                // return self::getPaymentSuccess();
                             }
 
                         } else if ($_POST['forma-pagamento'] == 2) {
@@ -62,14 +77,22 @@ class Create extends Page {
                                 $valorParcela = '0';
                                 $dataParcela = date('Y-m-d');
                             }
+                            var_dump($i);
+                            var_dump($count);
+                            var_dump($valorfor);
                             
+                            var_dump($valorParcela);
+                            var_dump($produto);
+                            echo 'teste 1 - cartão';
 
                             if ($valorParcela != '' && $dataParcela != '') {
-                               
+
+                                echo 'teste 2 - cartão';
+
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, $dataParcela, $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count); 
 
-                                return self::getPaymentSuccess();
+                                // return self::getPaymentSuccess();
                             }
                         }
                         $count++;

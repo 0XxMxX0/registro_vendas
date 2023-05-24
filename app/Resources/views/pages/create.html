@@ -60,6 +60,7 @@
                             <div class="col-3 offset-1 align-self-center col-sm-2 col-md-2 offset-md-0 col-lg-2 offset-lg-0 col-xl-1 align-self-center mt-3">
                                 <label for="boleto">Boleto</label>
                                 <input id="boleto" name="boleto" type="hidden"/>
+                                <input id="quantidadeProdutos" name="quantidadeProdutos" type="hidden" value="1"/>
                             </div>
                         </div>
                     </li>
@@ -83,6 +84,7 @@
         var parentElement = document.getElementById('product-box');
         if (productCount < 6) {
             productCount++;
+            var totalProdutos = document.querySelector('#quantidadeProdutos');
 
             var rowDiv = document.createElement('div');
             rowDiv.classList.add('row', 'mb-1');
@@ -118,6 +120,9 @@
             rowDiv.appendChild(col2Div);
 
             parentElement.appendChild(rowDiv);
+            totalProdutos.innerHTML = `
+                <input id="quantidadeProdutos" name="quantidadeProdutos" type="hidden" value="${productCount}"/>
+            `;
 
             updateResumo();
         }
@@ -152,6 +157,7 @@
         totalBoleto.innerHTML = `
             <input id="boletoTotal" name="boletoTotal" type="hidden" value="${total}"/>
         `;
+
     }
 
     function showDiv() {

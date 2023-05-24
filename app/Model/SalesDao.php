@@ -29,7 +29,7 @@ class SalesDao{
                     $insert->bindValue(1, $lastId);
                     $insert->bindValue(2, $financeiro->getValor());
                     $insert->bindValue(3, $financeiro->getData());
-                    $insert->bindValue(4, $lastId);
+                    $insert->bindValue(4, $financeiro->getProduto());
                     $insert->bindValue(5, $count);
                     $status = $insert->execute() ? true : false;
                     $count++;

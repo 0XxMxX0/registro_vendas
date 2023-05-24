@@ -56,7 +56,7 @@ class Create extends Page {
 
                                 $a = 0;
                                 while($a < count($obFinanceiro)){
-                                    $obSalesDao->createPayment($obFinanceiro[$a], $count, $id_venda);
+                                    $obSalesDao->createPayment($obFinanceiro[$a], $a, $id_venda);
                                     $a++;
                                 }
                                 
@@ -94,7 +94,7 @@ class Create extends Page {
 
                                 $a = 0;
                                 while($a < count($obFinanceiro)){
-                                    $obSalesDao->createPayment($obFinanceiro[$a], $count, $id_venda);
+                                    $obSalesDao->createPayment($obFinanceiro[$a], $a, $id_venda);
                                     $a++;
                                 }
                                 

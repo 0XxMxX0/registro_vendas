@@ -5,38 +5,42 @@ use \App\Model\Connect;
 
 class SalesDao{
     
-    public function create(Venda $venda, Financeiro $financeiro, $numerosParcelas){
+
+    public function createClient(Venda $venda){
         
+        $sql = "INSERT INTO venda(NomeCLiente,FormaPagamento) VALUES (?,?)";
+        
+        $insert = Connect::getConn()->prepare($sql);
+        $insert->bindValue(1, $venda->getClienteNome());
+        $insert->bindValue(2, $venda->getFormaPagamento());
+        $status = $insert->execute() ? true : false;
+        
+        if($status){
+            $lastId = Connect::getConn()->lastInsertId();
+            return $lastId;
+        }
+    }    
+    
+    public function createPayment(Financeiro $financeiro, $numeroParcela){
+
         if($financeiro != ''){
-
-            $sql = "INSERT INTO venda(NomeCLiente,FormaPagamento) VALUES (?,?)";
-            
-            $insert = Connect::getConn()->prepare($sql);
-            $insert->bindValue(1, $venda->getClienteNome());
-            $insert->bindValue(2, $venda->getFormaPagamento());
-            $status = $insert->execute() ? true : false;
-
-            if($status = true){
+            if($financeiro->getid_Venda() != '' && $financeiro->getData() != '' && $financeiro->getProduto() != '' && $financeiro->getValor() != ''){
                 
-                $lastId = Connect::getConn()->lastInsertId();
-                $count = 1;
+                $sql = "INSERT INTO financeiro (Id_Venda, Valor, Date, Produto, NumeroParcela) VALUES (?,?,?,?,?)";
 
-                while($count <= $numerosParcelas){
-
-                    $sql = "INSERT INTO financeiro (Id_Venda, Valor, Date, Produto, NumeroParcela) VALUES (?,?,?,?,?)";
-
-                    $insert = Connect::getConn()->prepare($sql);
-                    $insert->bindValue(1, $lastId);
-                    $insert->bindValue(2, $financeiro->getValor());
-                    $insert->bindValue(3, $financeiro->getData());
-                    $insert->bindValue(4, $financeiro->getProduto());
-                    $insert->bindValue(5, $count);
-                    $status = $insert->execute() ? true : false;
-                    $count++;
-                }
+                $insert = Connect::getConn()->prepare($sql);
+                $insert->bindValue(1, $financeiro->getid_Venda());
+                $insert->bindValue(2, $financeiro->getValor());
+                $insert->bindValue(3, $financeiro->getData());
+                $insert->bindValue(4, $financeiro->getProduto());
+                $insert->bindValue(5, $numeroParcela);
+                $status = $insert->execute() ? true : false;
+                return $status;
             }
         }
+        return false;
     }
+
 
     public function read(){
 

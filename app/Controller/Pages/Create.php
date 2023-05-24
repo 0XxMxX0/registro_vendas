@@ -28,13 +28,14 @@ class Create extends Page {
                 
                 $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
                 $id_venda = $obSalesDao->createClient($obVenda);
+               
+                $valorfor = $quantidadeProdutos;
+                if($quantidadeParcelas > $quantidadeProdutos){
+                    $valorfor = $quantidadeParcelas;
+                } 
 
-                if ($quantidadeParcelas > 0) {
+                if ($valorfor > 0) {
 
-                    $valorfor = $quantidadeProdutos;
-                    if($quantidadeParcelas > $quantidadeProdutos){
-                        $valorfor = $quantidadeParcelas;
-                    } 
 
                     for ($i = 0; $i < $valorfor; $i++) {
 
@@ -45,15 +46,25 @@ class Create extends Page {
 
                             if ($valorParcela != '' && $produto != '') {
                                 
+                                // var_dump($valorParcela);
+                                // var_dump($produto);
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, date('Y-m-d'), $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count);
                                 
-                                return self::getPaymentSuccess();
+                                // return self::getPaymentSuccess();
                             }
 
                         } else if ($_POST['forma-pagamento'] == 2) {
 
                             $produto = $_POST['produto'.'-'.$i];
+
+                            
+                            var_dump($i);
+                            var_dump($count);
+                            var_dump($quantidadeParcelas);
+                            var_dump($quantidadeProdutos);
+                            var_dump($valorfor);
+
 
                             if($count <= $quantidadeParcelas) {
                                 $valorParcela = $_POST['valor'.'-'.$i];
@@ -62,13 +73,17 @@ class Create extends Page {
                                 $valorParcela = '0';
                                 $dataParcela = date('Y-m-d');
                             }
+                            
 
-                            if ($produto != '' && $valorParcela != '' && $dataParcela != '') {
-                                
+                            if ($valorParcela != '' && $dataParcela != '') {
+                               
+                                var_dump($valorParcela);
+                                var_dump($dataParcela);
+                               
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, $dataParcela, $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count); 
 
-                                return self::getPaymentSuccess();
+                                // return self::getPaymentSuccess();
                             }
                         }
                         $count++;

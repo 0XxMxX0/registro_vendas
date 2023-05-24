@@ -33,23 +33,44 @@ class Update extends Page {
             if(count($resultado) > 0){
 
                 $financeiro = '';
+                $financeiroN = '';
+                $produto  = '';
 
                 foreach($resultado as $key) {
-
                     $nomeCliente = $key['NomeCliente'];
                     $formaPagamento = ($key['FormaPagamento'] == 1) ? 'Boleto' : (($key['FormaPagamento'] == 2) ? 'Cartão de crédito/débito' : 'Não informado');
-                    $financeiro .= "<div class='row'>
-                                        <div class='input-group mb-3 col'>
-                                            <span class='input-group-text' id='dataParcela'>{$key['NumeroParcela']}</span>
-                                            <input type='date' class='form-control' aria-label='Data da parcela' aria-describedby='dataParcela' name='date-{$key['NumeroParcela']}' value='{$key['Date']}'>
-                                        </div>
-                                        <div class='col'>
-                                            <input type='text' class='form-control' placeholder='{$key['Produto']}' name='produto-{$key['NumeroParcela']}' aria-label='produtoParcela'>
-                                        </div>
-                                        <div class='col-5'>
-                                            <input type='text' class='form-control' placeholder='R$ {$key['Valor']}' name='valor-{$key['NumeroParcela']}' aria-label='valorParcela'>
-                                        </div>
-                                    </div>";
+                    
+                    $produto .= "<div class='form-floating mb-3 mt-2 col-5'>
+                                    <input type='text' class='form-control' id='nomeCliente' name='nomeCliente' disabled placeholder='Produto: {$key['Produto']} | Data: {$key['Date']} | Valor: {$key['Valor']}'>
+                                    <label for='nomeCliente'>Produto: {$key['Produto']} | Data: {$key['Date']} | Valor: {$key['Valor']}</label>
+                                 </div>";
+
+                    if($key['Valor'] != 0){
+
+                        $financeiro .= "<div class='row'>
+                                            <div class='input-group mb-3 col'>
+                                                <span class='input-group-text'  id='dataParcela'>{$key['NumeroParcela']}</span>
+                                                <input type='date' class='form-control' aria-label='Data da parcela' aria-describedby='dataParcela' name='date-{$key['NumeroParcela']}' value='{$key['Date']}'>
+                                            </div>
+                                            <div class='col-5'>
+                                                <input type='text' class='form-control' placeholder='R$ {$key['Valor']}' name='valor-{$key['NumeroParcela']}' aria-label='valorParcela'>
+                                            </div>
+                                        </div>";
+                    } else if ($key['Valor'] == 0){
+
+                        $titleFinanceiroNo = 'Parcelas não ativas';
+                        $financeiroN .= "<div class='row'>
+                                            <div class='input-group mb-3 col'>
+                                                <span class='input-group-text' disabled id='dataParcela'>{$key['NumeroParcela']}</span>
+                                                <input type='date' class='form-control' aria-label='Data da parcela' aria-describedby='dataParcela' name='date-{$key['NumeroParcela']}' value='{$key['Date']}'>
+                                            </div>
+                                            <div class='col-5'>
+                                                <input type='text' class='form-control' disable placeholder='R$ {$key['Valor']}' name='valor-{$key['NumeroParcela']}' aria-label='valorParcela'>
+                                            </div>
+                                        </div>";
+                    }
+                    
+                    
                 
                     if(isset($_POST['btn-success'])) {
                         
@@ -83,7 +104,7 @@ class Update extends Page {
                                 $dateParcelaUpdate = $key['Date'];
                             }
 
-                            $obFinanceiro = new Model\Financeiro($key['Id_Financeiro'], $valorParcelaUpdate, $dateParcelaUpdate, $produtoUpdate, $key['NumeroParcela']);
+                            $obFinanceiro = new Model\Financeiro($key['Id_Financeiro'],'', $valorParcelaUpdate, $dateParcelaUpdate, $produtoUpdate, $key['NumeroParcela']);
                             $obVenda = new Model\Venda($key['Id_Venda'],$nomeClienteUpdate, $formaPagamento);
                             $obSalesDao->update($obFinanceiro, $obVenda);
                             $_SESSION['messagerBar'] = ['alert' => 'success', 'messeger' => 'Venda editada com sucesso!'];
@@ -99,7 +120,10 @@ class Update extends Page {
             'title' => $title,
             'nomeCliente' => $nomeCliente,
             'formaPagamento' => $formaPagamento,
-            'financeiro' => $financeiro
+            'financeiro' => $financeiro,
+            'financeiroNãofaturado' => $financeiroN,
+            'titleFinanceiroNo' => $titleFinanceiroNo != '' ? $titleFinanceiroNo : '',
+            'produto' => $produto
         ]);
         return parent::getPage($title, $content);
     }

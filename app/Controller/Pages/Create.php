@@ -29,41 +29,41 @@ class Create extends Page {
                 $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
                 $id_venda = $obSalesDao->createClient($obVenda);
 
-                if($_POST['forma-pagamento'] == 1){
-                    $quantidadeParcelas = 1;
-                } 
-
                 if ($quantidadeParcelas > 0) {
-                    for ($i = 0; $i <= $quantidadeParcelas; $i++) {
+                    for ($i = 0; $i < $quantidadeProdutos; $i++) {
 
                         if ($_POST['forma-pagamento'] == 1) {
                             
                             $valorParcela = $_POST['valor'.'-'.$i];
                             $produto = $_POST['produto'.'-'.$i];
-                            
+
                             if ($valorParcela != '' && $produto != '') {
                                 
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, date('Y-m-d'), $produto, $count);
-                                $obSalesDao->createPayment($obFinanceiro, $quantidadeProdutos);
+                                $obSalesDao->createPayment($obFinanceiro, $count);
                                 
                                 return self::getPaymentSuccess();
                             }
 
                         } else if ($_POST['forma-pagamento'] == 2) {
 
-                            $valorParcela = '0';
-                            $dataParcela = date('Y-m-d');
                             $produto = $_POST['produto'.'-'.$i];
 
                             if($count <= $quantidadeParcelas) {
                                 $valorParcela = $_POST['valor'.'-'.$i];
                                 $dataParcela = $_POST['data'.'-'.$i];
+                            } else {
+                                $valorParcela = '0';
+                                $dataParcela = date('Y-m-d');
+                                echo 'teste';
                             }
 
                             if ($produto != '' && $valorParcela != '' && $dataParcela != '') {
                                 
                                 $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, $dataParcela, $produto, $count);
                                 $obSalesDao->createPayment($obFinanceiro, $count); 
+
+                                return self::getPaymentSuccess();
                             }
                         }
                         $count++;

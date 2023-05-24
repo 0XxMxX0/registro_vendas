@@ -21,18 +21,13 @@ class Create extends Page {
 
             $obSalesDao = new SalesDao();
             $count = 1;
+            $error = [];
             $quantidadeParcelas = $_POST['quantidadeParcelas'];
             $quantidadeProdutos = $_POST['quantidadeProdutos'];
 
             if ($_POST['forma-pagamento'] != '') {
                 
-                $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
-                $id_venda = $obSalesDao->createClient($obVenda);
-
                 $valorfor = $quantidadeProdutos;
-                
-                var_dump($quantidadeParcelas);
-                var_dump($quantidadeProdutos);
                 
                 if($quantidadeParcelas > $quantidadeProdutos){
                     $valorfor = $quantidadeParcelas;
@@ -40,7 +35,6 @@ class Create extends Page {
 
                 if ($valorfor > 0) {
 
-                    var_dump($valorfor);
 
                     for ($i = 0; $i < $valorfor; $i++) {
 
@@ -48,22 +42,29 @@ class Create extends Page {
                             
                             $valorParcela = $_POST['valor'.'-'.$i];
                             $produto = $_POST['produto'.'-'.$i];
-
-                            var_dump($i);
                             
-                            echo 'teste 1 - boleto';
-
                             if ($valorParcela != '' && $produto != '') {
-                                
-                                var_dump($valorParcela);
-                                var_dump($produto);
-                                
-                                echo 'teste 2 - boleto';
+                                $obFinanceiro[] = new \App\Model\Financeiro('','', $valorParcela, date('Y-m-d'), $produto, $count);
+                            } else {
+                                $error[] = "Produto {$produto} | Valor {$valorParcela} | Parcela {$count}";
+                            }
 
-                                $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, date('Y-m-d'), $produto, $count);
-                                $obSalesDao->createPayment($obFinanceiro, $count);
+                            if(count($error) == 0 AND $count >= $valorfor){
                                 
-                                // return self::getPaymentSuccess();
+                                $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
+                                $id_venda = $obSalesDao->createClient($obVenda);
+
+                                $a = 0;
+                                while($a < count($obFinanceiro)){
+                                    $obSalesDao->createPayment($obFinanceiro[$a], $count, $id_venda);
+                                    $a++;
+                                }
+                                
+                                $_SESSION['messagerBar'] = ['alert' => 'success', 'messeger' => 'Venda registrada com sucesso!'];
+                                return self::getPaymentSuccess();
+                                
+                            } else if($error[$i]){
+                                $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => "a Parcela ($error[$i]) não foi registrado"];
                             }
 
                         } else if ($_POST['forma-pagamento'] == 2) {
@@ -77,26 +78,38 @@ class Create extends Page {
                                 $valorParcela = '0';
                                 $dataParcela = date('Y-m-d');
                             }
-                            var_dump($i);
-                            var_dump($count);
-                            var_dump($valorfor);
                             
-                            var_dump($valorParcela);
-                            var_dump($produto);
-                            echo 'teste 1 - cartão';
-
                             if ($valorParcela != '' && $dataParcela != '') {
 
-                                echo 'teste 2 - cartão';
+                                $obFinanceiro[] = new \App\Model\Financeiro('','', $valorParcela, $dataParcela, $produto, $count);
+                            
+                            } else {
+                                $error[] = 'error';
+                            }
 
-                                $obFinanceiro = new \App\Model\Financeiro('',$id_venda, $valorParcela, $dataParcela, $produto, $count);
-                                $obSalesDao->createPayment($obFinanceiro, $count); 
+                            if(count($error) == 0 AND $count >= $valorfor){
+                                
+                                $obVenda = new \App\Model\Venda('', $_POST['nomeCliente'], $_POST['forma-pagamento']);
+                                $id_venda = $obSalesDao->createClient($obVenda);
 
-                                // return self::getPaymentSuccess();
+                                $a = 0;
+                                while($a < count($obFinanceiro)){
+                                    $obSalesDao->createPayment($obFinanceiro[$a], $count, $id_venda);
+                                    $a++;
+                                }
+                                
+                                $_SESSION['messagerBar'] = ['alert' => 'success', 'messeger' => 'Venda registrada com sucesso!'];
+                                return self::getPaymentSuccess();
+                                
+                            } else if($error[$i]){
+                                $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => "a Parcela ($error[$i]) não foi registrado"];
                             }
                         }
                         $count++;
                     } 
+                } else {
+                    $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => 'Produto ou parcelas não informadas!'];
+                    header('Location: index.php');
                 }
             } 
         } 

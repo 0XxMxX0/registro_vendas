@@ -28,6 +28,8 @@ class SalesDao{
             
             if($financeiro->getid_Venda() != '' && $financeiro->getData() != '' && $financeiro->getValor() != ''){
                 
+                var_dump($financeiro, $numeroParcela);
+
                 $sql = "INSERT INTO financeiro (Id_Venda, Valor, Date, Produto, NumeroParcela) VALUES (?,?,?,?,?)";
 
                 $insert = Connect::getConn()->prepare($sql);

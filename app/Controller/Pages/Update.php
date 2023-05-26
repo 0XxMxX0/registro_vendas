@@ -126,7 +126,7 @@ class Update extends Page {
             'formaPagamento' => $formaPagamento,
             'financeiro' => $financeiro,
             'financeiroNãofaturado' => $financeiroN,
-            'titleFinanceiroNo' => $titleFinanceiroNo != '' ? $titleFinanceiroNo : '',
+            'titleFinanceiroNo' => isset($titleFinanceiroNo) != '' ? $titleFinanceiroNo : '',
             'produto' => $produto,
         ]);
         return parent::getPage($title, $content);

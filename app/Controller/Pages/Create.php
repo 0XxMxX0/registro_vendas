@@ -69,7 +69,7 @@ class Create extends Page {
 
                         } else if ($_POST['forma-pagamento'] == 2) {
 
-                            $produto = $_POST['produto'.'-'.$i];
+                            $produto = isset($_POST['produto'.'-'.$i]) ? $_POST['produto'.'-'.$i] : '' ;
 
                             if($count <= $quantidadeParcelas) {
                                 $valorParcela = $_POST['valor'.'-'.$i];
@@ -101,7 +101,7 @@ class Create extends Page {
                                 $_SESSION['messagerBar'] = ['alert' => 'success', 'messeger' => 'Venda registrada com sucesso!'];
                                 return self::getPaymentSuccess();
                                 
-                            } else if($error[$i]){
+                            } else if(isset($error[$i])){
                                 $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => "a Parcela ($error[$i]) não foi registrado"];
                             }
                         }

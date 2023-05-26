@@ -16,26 +16,19 @@ if(isset($_SESSION['messagerBar'])){
     <?php
     session_destroy();
 }
+    
+if(isset($_GET['type'])){
 
-try{
-    
-    if(isset($_GET['type'])){
+    if($_GET['type'] == 'update'){
 
-        if($_GET['type'] == 'update'){
-    
-            echo Update::getUpdate($_GET['id']);
-        } else if($_GET['type'] == 'create'){
-    
-            echo Create::getCreate();
-        } else {
-            echo Home::getHome();
-        }
-    
-    } else{
+        echo Update::getUpdate($_GET['id']);
+    } else if($_GET['type'] == 'create'){
+
+        echo Create::getCreate();
+    } else {
         echo Home::getHome();
     }
 
-} catch (\Exception $e){
-    $_SESSION['messagerBar'] = ['alert' => 'danger', 'messeger' => $erro->getMessage()];
-    header('Location: index.php');
+} else{
+    echo Home::getHome();
 }

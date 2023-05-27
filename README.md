@@ -1,13 +1,12 @@
 <h1 align="center">
-  <p>REGISTRAR VENDAS</p>
+  REGISTROR DE VENDAS
 </h1>
 
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=VERSÃO&message=1.0.0&color=blue&style=for-the-badge)
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=DATA%20DA%20CRIAÇÃO&message=MAI/23&color=blue&style=for-the-badge)
 
-> **Projeto com foco total na linguagem PHP POO com padrão MVC e Meios de pagamentos
-**
+> **Projeto de Registro de Vendas em PHP POO (Padrão MVC) com Meios de Pagamentos**
 
 # Índice 
 
@@ -19,7 +18,7 @@
 * [Criador 🐱‍👤](#criador-)
 
 # Descrição do Projeto 🎯
-#### O Sistema de Registro de Vendas é uma aplicação poderosa e eficiente, projetada para auxiliar empreendedores no gerenciamento de suas transações comerciais de forma rápida e intuitiva. Com um design minimalista e funcional, essa solução oferece uma experiência profissional, permitindo o controle preciso das atividades comerciais. Para que esse projeto funcione em sua maquina local você precisa seguir alguns passos, segue abaixo:
+#### Este projeto tem como objetivo desenvolver um sistema de registro de vendas utilizando a linguagem PHP com foco total na Programação Orientada a Objetos (POO) e seguindo o padrão de arquitetura MVC (Model-View-Controller). Além disso, será implementada a integração com diversos meios de pagamento, proporcionando uma experiência completa para os usuários.:
 
 ### Intruções de uso 🐱‍🚀 (Acrecentaréi mais coisas no decorrer dos commits)
 - `Passo 1`: Faça o dowloand do arquivo ZIP deste codigo para a sua maquina.
